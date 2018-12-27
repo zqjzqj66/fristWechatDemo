@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.demo.dao.AreaMapper">
+
+    <!-- 简单映射 -->
+    <resultMap id="simpleResultMap"
+               type="com.imooc.demo.entity.Area">
+        <id column="area_id" javaType="java.lang.Integer"
+            property="areaId" />
+        <result column="area_name" javaType="java.lang.String"
+                property="areaName" />
+        <result column="priority" javaType="java.lang.Integer"
+                property="priority" />
+        <result column="create_date_time" javaType="java.time.LocalDateTime"
+                property="createDateTime" />
+        <result column="updata_date_time" javaType="java.time.LocalDateTime"
+                property="updateDateTime" />
+    </resultMap>
+
+
+    <!-- select="cn.edu.zzuli.goldengrain.mapper.UserMapper.getFormulaDetailByFormulaId" -->
+    <!-- 根据 id 查询 -->
+    <sql id="selectAreaById_sql">
+        SELECT * FROM area WHERE area_id = #{areaId}
+    </sql>
+
+    <sql id="selectAllArea_sql">
+        SELECT * FROM area
+    </sql>
+
+    <select id="selectAreaById" resultMap="simpleResultMap">
+        <include refid="selectAreaById_sql"></include>
+    </select>
+
+
+    <select id="selectAllArea" resultMap="simpleResultMap">
+        <!--<include refid="selectAllArea_sql"></include>-->
+        SELECT * FROM area
+    </select>
+
+
+    <insert id="insertArea" useGeneratedKeys="true"
+            keyProperty="areaId" keyColumn="area_id">
+        insert into area(area_name, priority, create_date_time, updata_date_time)
+        values (
+        #{areaName}, #{priority},now(),now())
+    </insert>
+
+    <!-- Description: 根据配方编号删除配方信息 -->
+    <!-- public boolean removeFormulaReport(FormulaReport formulaReport); -->
+    <delete id="deleteArea">
+        delete from area
+        where area_id =
+        #{areaId}
+    </delete>
+
+    <!-- Description: 根据配方对象修改配方表 -->
+    <!-- public boolean updateFormulaReport(FormulaReport formulaReport); -->
+    <update id="updateArea">
+        update area
+        <set>
+            <if test="areaName != null">
+                area_name = #{areaName},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="updateDateTime == null">
+                updata_date_time = now()
+            </if>
+        </set>
+        where area_id = #{areaId}
+    </update>
+
+</mapper>
