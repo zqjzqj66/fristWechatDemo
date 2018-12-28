@@ -3,11 +3,9 @@ package com.imooc.demo.controller;
 import com.imooc.demo.entity.Area;
 import com.imooc.demo.service.AreaService;
 import com.imooc.demo.vo.Msg;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,6 +16,7 @@ import java.util.List;
  * @ClassName: AreaController
  * @date 2018/12/23 16:54
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "/area")
 public class AreaController {
@@ -35,19 +34,23 @@ public class AreaController {
     @RequestMapping(value = "/selectAreaById",method = RequestMethod.GET)
     public Msg selectAreaById(@RequestParam(value = "areaId",required = true) Integer areaId){
         Area area = areaService.selectAreaById(areaId);
-        return area==null ? Msg.success().add("data",area)
-                :Msg.fail().setMsg("查询失败，请重试！");
+        //原来这里的slf4j是不可以直接的打印对象的 所有使用slf4j的占位符来打印对象
+        log.info("{}",area);
+        System.out.println(area);
+        return  Msg.success().add("data",area);
     }
 
     @RequestMapping(value = "/insertArea",method = RequestMethod.POST)
-    public Msg insertArea(@RequestParam(value = "area",required = true) Area area){
+    public Msg insertArea(@RequestBody  Area area){
         boolean b = areaService.insertArea(area);
         return b==true?Msg.success().setMsg("插入成功"):Msg.fail().setMsg("插入失败");
     }
 
     @RequestMapping(value = "/updateArea",method = RequestMethod.POST)
-    public Msg updateArea(@RequestParam(value = "area",required = true) Area area){
+    public Msg updateArea(@RequestBody Area area){
+        System.out.println(area);
         boolean b = areaService.updateArea(area);
+        System.out.println(b);
         return b==true?Msg.success().setMsg("更新成功"):Msg.fail().setMsg("更新失败");
     }
 
